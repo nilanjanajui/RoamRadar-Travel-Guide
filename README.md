@@ -1,4 +1,4 @@
-# RoamRadar Travel Guide
+# RoamRadar - Travel Guide
 
 ## Overview
 
@@ -89,6 +89,3 @@ git clone https://github.com/yourusername/roamradar.git
 
 Check out the live demo here: [RoamRadar Live Demo](https://yourusername.github.io/roamradar/)
 
-### License
-
-MIT License © 2026 RoamRadar Team
