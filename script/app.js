@@ -1,12 +1,8 @@
-// ------------------------------
-// GLOBAL CONSTANTS
-// ------------------------------
 const WEATHER_URL = "https://api.open-meteo.com/v1/forecast";
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 
-// ------------------------------
 // DOM ELEMENTS
-// ------------------------------
+
 const searchInput = document.querySelector('input[type="text"]');
 const weatherTitle = document.querySelector('.card.bg-primary .card-body h2');
 const weatherTempStatic = document.querySelector('#weather-temp-static');
@@ -16,9 +12,9 @@ const weatherDescLive = document.querySelector('#weather-desc-live');
 const attractionsGrid = document.querySelector('.grid.md\\:grid-cols-3.gap-4');
 
 
-// ------------------------------
+
 // STORAGE HELPERS
-// ------------------------------
+
 function getFavorites() {
     return JSON.parse(localStorage.getItem("roamRadarFavorites") || "[]");
 }
@@ -35,9 +31,8 @@ function saveTheme(theme) {
     localStorage.setItem("roamRadarTheme", theme);
 }
 
-// ------------------------------
 // MODAL
-// ------------------------------
+
 const modal = document.createElement('div');
 modal.className = "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden";
 modal.innerHTML = `
@@ -49,6 +44,7 @@ modal.innerHTML = `
     <div id="modal-map" class="w-full h-64 rounded-lg"></div>
 </div>
 `;
+
 document.body.appendChild(modal);
 const modalTitle = modal.querySelector("#modal-title");
 const modalDesc = modal.querySelector("#modal-description");
@@ -73,9 +69,10 @@ function closeModal() {
 
 modal.querySelector("button").addEventListener("click", closeModal);
 
-// ------------------------------
+
+
 // AUTOCOMPLETE
-// ------------------------------
+
 const suggestionBox = document.createElement('ul');
 suggestionBox.className = "absolute bg-base-100 shadow-lg rounded-md w-full max-h-60 overflow-auto z-50";
 searchInput.parentElement.style.position = "relative";
@@ -120,18 +117,16 @@ document.addEventListener('click', e => {
     if (!searchInput.parentElement.contains(e.target)) suggestionBox.innerHTML = '';
 });
 
-// ------------------------------
 // SEARCH CONTROLLER
-// ------------------------------
+
 async function handleSearch(cityObj) {
     const { name, lat, lon } = cityObj;
     await fetchWeather(lat, lon, name);
     fetchAttractions(name, lat, lon);
 }
 
-// ------------------------------
 // WEATHER
-// ------------------------------
+
 async function fetchWeather(lat, lon, displayName) {
     try {
         const res = await fetch(`${WEATHER_URL}?latitude=${lat}&longitude=${lon}&current_weather=true`);
@@ -245,9 +240,9 @@ function bindStaticAttractionFavoriteButtons() {
     });
 }
 
-// ------------------------------
-// FAVORITES SYSTEM
-// ------------------------------
+
+// FAVORITES
+
 function toggleFavorite(name) {
     const favs = getFavorites();
     if (favs.includes(name)) {
@@ -307,9 +302,8 @@ function renderFavorites() {
 // Initialize favorites on page load
 renderFavorites();
 
-// ------------------------------
 // MODAL + LEAFLET MAP + CAROUSEL
-// ------------------------------
+
 function showAttractionModal(att) {
     // Ensure previous resources are cleared before creating new modal content.
     if (carouselIntervalId) {
@@ -355,16 +349,16 @@ function showAttractionModal(att) {
     modal.classList.remove("hidden");
 }
 
-// ------------------------------
+
 // INITIALIZE
-// ------------------------------
+
 function init() { renderFavorites(); }
 init();
 bindStaticAttractionFavoriteButtons();
 
-// ------------------------------
+
 // DARK / LIGHT MODE
-// ------------------------------
+
 const themeToggle = document.getElementById("theme-toggle");
 const root = document.documentElement;
 
