@@ -125,17 +125,15 @@ async function fetchWeather(lat, lon, displayName) {
     }
 }
 
-// ------------------------------
-// ATTRACTIONS
-// ------------------------------
+
 function fetchAttractions(city, lat, lon) {
     const types = ["Sight", "Nature", "Cultural"];
     const attractions = types.map((type, i) => ({
         name: `${city} ${type} Spot`,
         images: [
-            `https://source.unsplash.com/400x300/?${encodeURIComponent(city)},${encodeURIComponent(type)},1`,
-            `https://source.unsplash.com/400x300/?${encodeURIComponent(city)},${encodeURIComponent(type)},2`,
-            `https://source.unsplash.com/400x300/?${encodeURIComponent(city)},${encodeURIComponent(type)},3`
+            `https://picsum.photos/seed/${encodeURIComponent(`${city}-${type}-1`)}/800/600`,
+            `https://picsum.photos/seed/${encodeURIComponent(`${city}-${type}-2`)}/800/600`,
+            `https://picsum.photos/seed/${encodeURIComponent(`${city}-${type}-3`)}/800/600`
         ],
         description: `Discover the ${type.toLowerCase()} of ${city}.`,
         type,
@@ -147,35 +145,46 @@ function fetchAttractions(city, lat, lon) {
 }
 
 function renderAttractions(list) {
-    attractionsGrid.innerHTML = '';
+    // make sure to select the container where cards go
+    const container = document.querySelector('#attractions-grid + .grid');
+    container.innerHTML = '';
 
     list.forEach(att => {
         const card = document.createElement("div");
         card.className = "card bg-base-100 shadow cursor-pointer";
+        const fallbackImage = `https://picsum.photos/seed/${encodeURIComponent(`${att.name}-fallback`)}/800/600`;
 
         card.innerHTML = `
-        <figure><img src="${att.images[0]}" alt="${att.name}"></figure>
-        <div class="card-body p-4">
-        <h3 class="font-semibold">${att.name}</h3>
-        <p class="text-xs opacity-70">${att.description}</p>
-        <div class="flex justify-between items-center mt-2">
-            <span class="badge badge-sm">${att.type}</span>
-            <i class="fa-regular fa-heart favorite-btn cursor-pointer"></i>
-        </div>
-        </div>
-    `;
+            <figure>
+                <img src="${att.images[0]}" alt="${att.name}" class="w-full h-40 object-cover rounded-t-lg">
+            </figure>
+            <div class="card-body p-4">
+                <h3 class="font-semibold">${att.name}</h3>
+                <p class="text-xs opacity-70">${att.description}</p>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="badge badge-sm">${att.type}</span>
+                    <i class="fa-regular fa-heart favorite-btn cursor-pointer"></i>
+                </div>
+            </div>
+        `;
 
-        // Favorite
+        // favorite toggle
         card.querySelector(".favorite-btn").addEventListener("click", e => {
             e.stopPropagation();
             toggleFavorite(att.name);
             card.querySelector(".favorite-btn").classList.toggle("text-red-500");
         });
 
-        // Modal on click
+        // Recover if a remote image fails to load.
+        const cardImage = card.querySelector("img");
+        cardImage.addEventListener("error", () => {
+            cardImage.src = fallbackImage;
+        }, { once: true });
+
+        // modal click
         card.addEventListener("click", () => showAttractionModal(att));
 
-        attractionsGrid.appendChild(card);
+        container.appendChild(card);
     });
 }
 
@@ -188,10 +197,14 @@ function showAttractionModal(att) {
 
     // Carousel
     carouselDiv.innerHTML = '';
+    const fallbackImage = `https://picsum.photos/seed/${encodeURIComponent(`${att.name}-modal-fallback`)}/800/600`;
     att.images.forEach((img, i) => {
         const imgEl = document.createElement("img");
         imgEl.src = img;
         imgEl.className = `absolute top-0 left-0 w-full h-64 object-cover transition-opacity duration-500 ${i === 0 ? 'opacity-100' : 'opacity-0'}`;
+        imgEl.addEventListener("error", () => {
+            imgEl.src = fallbackImage;
+        }, { once: true });
         carouselDiv.appendChild(imgEl);
     });
 
