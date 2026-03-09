@@ -1,57 +1,67 @@
-# RoamRadar Travel Guide
+## RoamRadar Travel Guide
 
-## Overview
+### Overview
 
-RoamRadar is a modern, responsive travel dashboard designed to help users explore destinations, check current weather, discover attractions, save favorites, and plan trips with AI assistance. The app features dark/light mode toggling, dynamic weather updates, and interactive maps using Leaflet.
+RoamRadar is a responsive travel dashboard designed to help users explore destinations, check current weather, discover attractions, save favorites, and plan trips with AI assistance. It supports dark/light mode toggling, dynamic weather updates, and interactive maps powered by Leaflet. The app is built using Tailwind CSS, DaisyUI, Font Awesome, DOM manipulation, JavaScript core concepts, ES6, API fetching, and is fully mobile responsive.
 
-## Features
+### Features
 
-### 🌤 Current Weather
+#### 🌤 Current Weather
 
-* Fetches real-time weather for any searched city.
+* Fetches real-time weather for any searched city using Open-Meteo API.
 * Displays temperature, wind speed, and direction.
 * Smooth transition between static default weather and live API data.
 
-### 🏛 Recommended Attractions
+#### 🏛 Recommended Attractions
 
 * Dynamically generates attraction cards based on city search.
-* Each card contains an image, description, type badge, and favorite button.
-* Click a card to open a modal with a carousel of images and a Leaflet map.
+* Each card includes an image, description, type badge, and favorite button.
+* Clicking a card opens a modal with a carousel of images and a Leaflet map.
 
-### ❤️ Favorites System
+#### ❤️ Favorites System
 
 * Users can save cities to favorites.
-* Favorites persist across sessions using `localStorage`.
+* Favorites persist across sessions using localStorage.
 * Clicking a favorite reloads its data.
 
-### 🌙 Dark/Light Mode
+#### 🌙 Dark/Light Mode
 
 * Toggle between dark and light themes using DaisyUI.
-* Theme preference is saved in `localStorage`.
+* Theme preference is saved in localStorage.
 
-### 📝 Trip Journal
+#### 📝 Trip Journal
 
 * Users can add notes about their trips.
 * Supports multiple entries with a text area interface.
 
-### 🔍 Autocomplete Search
+#### 🔍 Autocomplete Search
 
 * Type a city name to get live suggestions using OpenStreetMap Nominatim API.
-* Select a suggestion to instantly load weather and attractions.
+* Selecting a suggestion instantly loads weather and attractions.
 
-### 🗺 Interactive Maps
+#### 🗺 Interactive Maps
 
-* Leaflet maps for each attraction in a modal.
-* Zoom and marker popup included.
+* Leaflet maps display each attraction in a modal.
+* Maps include zoom controls and marker popups.
 
-## Tech Stack
+### Future Implementation
+
+#### 🤖 AI Assistance
+
+* Personalized trip recommendations based on user preferences and past searches.
+* Automated itinerary planning and optimization.
+* AI-powered insights on attractions, weather, and local events.
+
+### Tech Stack
 
 * **Frontend:** HTML, Tailwind CSS, DaisyUI, Font Awesome
-* **JS Libraries:** Leaflet, Fetch API
+* **JavaScript Libraries:** Leaflet, Fetch API
 * **APIs:** Open-Meteo (weather), OpenStreetMap Nominatim (city search)
-* **Storage:** `localStorage` for favorites and theme preferences
+* **Storage:** localStorage for favorites and theme preferences
+* **Core JS Concepts:** DOM manipulation, ES6 features, event listeners, API fetching
+* **Responsive Design:** Fully mobile responsive layout using Tailwind CSS
 
-## File Structure
+### File Structure
 
 ```
 RoamRadar/
@@ -62,33 +72,22 @@ RoamRadar/
 │       images/
 ```
 
-## Setup & Usage
+### Setup & Usage
 
 1. Clone the repository:
 
-   ```bash
-   git clone https://github.com/yourusername/roamradar.git
-   ```
+```
+git clone https://github.com/yourusername/roamradar.git
+```
+
 2. Open `index.html` in your browser.
 3. Search for a city, view weather and attractions.
-4. Save favorites, toggle dark/light mode, and explore trip planning features.
+4. Save favorites, toggle dark/light mode, and explore trip journal features.
 
-## Contributing
+### Live Demo
 
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`
-3. Make changes and commit: `git commit -m 'Add feature'`
-4. Push to branch: `git push origin feature-name`
-5. Open a pull request.
+Check out the live demo here: [RoamRadar Live Demo](https://yourusername.github.io/roamradar/)
 
-## License
+### License
 
 MIT License © 2026 RoamRadar Team
-
-## Screenshots
-
-*(Add screenshots of your app here)*
-
----
-
-Made with ❤️ using Tailwind CSS and DaisyUI.
