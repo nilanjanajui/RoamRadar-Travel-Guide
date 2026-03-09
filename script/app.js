@@ -14,7 +14,26 @@ const weatherTempLive = document.querySelector('#weather-temp-live');
 const weatherDescStatic = document.querySelector('#weather-desc-static');
 const weatherDescLive = document.querySelector('#weather-desc-live');
 const attractionsGrid = document.querySelector('.grid.md\\:grid-cols-3.gap-4');
-const favoritesList = document.querySelector('.favorites-container') || document.createElement('div');
+
+
+// ------------------------------
+// STORAGE HELPERS
+// ------------------------------
+function getFavorites() {
+    return JSON.parse(localStorage.getItem("roamRadarFavorites") || "[]");
+}
+
+function saveFavorites(list) {
+    localStorage.setItem("roamRadarFavorites", JSON.stringify(list));
+}
+
+function getTheme() {
+    return localStorage.getItem("roamRadarTheme") || "light";
+}
+
+function saveTheme(theme) {
+    localStorage.setItem("roamRadarTheme", theme);
+}
 
 // ------------------------------
 // MODAL
@@ -35,7 +54,24 @@ const modalTitle = modal.querySelector("#modal-title");
 const modalDesc = modal.querySelector("#modal-description");
 const modalMapDiv = modal.querySelector("#modal-map");
 const carouselDiv = modal.querySelector("#carousel");
-modal.querySelector("button").addEventListener("click", () => modal.classList.add("hidden"));
+let modalMapInstance = null;
+let carouselIntervalId = null;
+
+function closeModal() {
+    modal.classList.add("hidden");
+
+    if (carouselIntervalId) {
+        clearInterval(carouselIntervalId);
+        carouselIntervalId = null;
+    }
+
+    if (modalMapInstance) {
+        modalMapInstance.remove();
+        modalMapInstance = null;
+    }
+}
+
+modal.querySelector("button").addEventListener("click", closeModal);
 
 // ------------------------------
 // AUTOCOMPLETE
@@ -152,6 +188,7 @@ function renderAttractions(list) {
     list.forEach(att => {
         const card = document.createElement("div");
         card.className = "card bg-base-100 shadow cursor-pointer";
+        const isFavorite = getFavorites().includes(att.name);
         const fallbackImage = `https://picsum.photos/seed/${encodeURIComponent(`${att.name}-fallback`)}/800/600`;
 
         card.innerHTML = `
@@ -163,7 +200,7 @@ function renderAttractions(list) {
                 <p class="text-xs opacity-70">${att.description}</p>
                 <div class="flex justify-between items-center mt-2">
                     <span class="badge badge-sm">${att.type}</span>
-                    <i class="fa-regular fa-heart favorite-btn cursor-pointer"></i>
+                    <i class="fa-regular fa-heart favorite-btn cursor-pointer ${isFavorite ? 'text-red-500' : ''}"></i>
                 </div>
             </div>
         `;
@@ -188,10 +225,102 @@ function renderAttractions(list) {
     });
 }
 
+function bindStaticAttractionFavoriteButtons() {
+    const cards = document.querySelectorAll('#attractions-grid + .grid .card');
+    cards.forEach(card => {
+        const title = card.querySelector('h3')?.textContent?.trim();
+        const heart = card.querySelector('i.fa-heart');
+        if (!title || !heart) return;
+
+        if (getFavorites().includes(title)) {
+            heart.classList.add('text-red-500');
+        }
+
+        heart.classList.add('favorite-btn', 'cursor-pointer');
+        heart.addEventListener('click', e => {
+            e.stopPropagation();
+            toggleFavorite(title);
+            heart.classList.toggle('text-red-500');
+        });
+    });
+}
+
+// ------------------------------
+// FAVORITES SYSTEM
+// ------------------------------
+function toggleFavorite(name) {
+    const favs = getFavorites();
+    if (favs.includes(name)) {
+        saveFavorites(favs.filter(c => c !== name));
+    } else { 
+        favs.push(name); 
+        saveFavorites(favs); 
+    }
+    renderFavorites();
+}
+
+function renderFavorites() {
+    const favs = getFavorites();
+    const container = document.querySelector('#favorites-container .space-y-3');
+    container.innerHTML = '';
+
+    if (favs.length === 0) {
+        container.innerHTML = `<p class="text-xs opacity-70">No favorites yet.</p>`;
+    }
+
+    favs.forEach(city => {
+        const div = document.createElement("div");
+        div.className = "flex justify-between items-center cursor-pointer hover:bg-base-200 p-1 rounded";
+
+        div.innerHTML = `
+            <p class="font-medium text-sm">${city}</p>
+            <i class="fa-solid fa-heart text-red-500 cursor-pointer"></i>
+        `;
+
+        // Click on heart toggles favorite
+        div.querySelector("i").addEventListener("click", e => {
+            e.stopPropagation();
+            toggleFavorite(city);
+        });
+
+        // Click on city reloads data
+        div.querySelector("p").addEventListener("click", () => {
+            searchInput.value = city;
+            // Geocode and run an actual search for this favorite city.
+            fetch(`${NOMINATIM_URL}?q=${encodeURIComponent(city)}&format=json&limit=1`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.length) return;
+                    handleSearch({
+                        lat: parseFloat(data[0].lat),
+                        lon: parseFloat(data[0].lon),
+                        name: data[0].display_name || city
+                    });
+                })
+                .catch(err => console.error("Favorite city lookup failed:", err));
+        });
+
+        container.appendChild(div);
+    });
+}
+
+// Initialize favorites on page load
+renderFavorites();
+
 // ------------------------------
 // MODAL + LEAFLET MAP + CAROUSEL
 // ------------------------------
 function showAttractionModal(att) {
+    // Ensure previous resources are cleared before creating new modal content.
+    if (carouselIntervalId) {
+        clearInterval(carouselIntervalId);
+        carouselIntervalId = null;
+    }
+    if (modalMapInstance) {
+        modalMapInstance.remove();
+        modalMapInstance = null;
+    }
+
     modalTitle.textContent = att.name;
     modalDesc.textContent = att.description;
 
@@ -209,7 +338,7 @@ function showAttractionModal(att) {
     });
 
     let index = 0;
-    setInterval(() => {
+    carouselIntervalId = setInterval(() => {
         const imgs = carouselDiv.querySelectorAll("img");
         imgs.forEach((img, i) => img.style.opacity = i === index ? '1' : '0');
         index = (index + 1) % att.images.length;
@@ -217,42 +346,13 @@ function showAttractionModal(att) {
 
     // Leaflet map
     modalMapDiv.innerHTML = '';
-    const map = L.map(modalMapDiv).setView([att.lat, att.lon], 14);
+    modalMapInstance = L.map(modalMapDiv).setView([att.lat, att.lon], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    L.marker([att.lat, att.lon]).addTo(map).bindPopup(att.name).openPopup();
+    }).addTo(modalMapInstance);
+    L.marker([att.lat, att.lon]).addTo(modalMapInstance).bindPopup(att.name).openPopup();
 
     modal.classList.remove("hidden");
-}
-
-// ------------------------------
-// FAVORITES
-// ------------------------------
-function getFavorites() { return JSON.parse(localStorage.getItem("roamRadarFavorites") || "[]"); }
-function saveFavorites(list) { localStorage.setItem("roamRadarFavorites", JSON.stringify(list)); }
-
-function toggleFavorite(name) {
-    const favs = getFavorites();
-    if (favs.includes(name)) saveFavorites(favs.filter(c => c !== name));
-    else { favs.push(name); saveFavorites(favs); }
-    renderFavorites();
-}
-
-function renderFavorites() {
-    const favs = getFavorites();
-    favoritesList.innerHTML = '';
-    if (favs.length === 0) favoritesList.innerHTML = `<p class="text-xs opacity-70">No favorites yet.</p>`;
-    favs.forEach(city => {
-        const div = document.createElement("div");
-        div.className = "flex justify-between items-center";
-        div.innerHTML = `
-        <p class="font-medium text-sm">${city}</p>
-        <i class="fa-solid fa-heart text-red-500 cursor-pointer"></i>
-    `;
-        div.querySelector("i").addEventListener("click", () => toggleFavorite(city));
-        favoritesList.appendChild(div);
-    });
 }
 
 // ------------------------------
@@ -260,3 +360,27 @@ function renderFavorites() {
 // ------------------------------
 function init() { renderFavorites(); }
 init();
+bindStaticAttractionFavoriteButtons();
+
+// ------------------------------
+// DARK / LIGHT MODE
+// ------------------------------
+const themeToggle = document.getElementById("theme-toggle");
+const root = document.documentElement;
+
+// Load saved theme
+const savedTheme = localStorage.getItem("roamRadarTheme");
+if (savedTheme) root.setAttribute("data-theme", savedTheme);
+
+// Toggle theme
+themeToggle.addEventListener("click", () => {
+    const currentTheme = root.getAttribute("data-theme") || "light";
+    const newTheme = currentTheme === "light" ? "dark" : "light";
+    root.setAttribute("data-theme", newTheme);
+    localStorage.setItem("roamRadarTheme", newTheme);
+
+    // optional: toggle icon
+    themeToggle.innerHTML = newTheme === "dark"
+        ? '<i class="fa-solid fa-sun"></i>'
+        : '<i class="fa-solid fa-moon"></i>';
+});

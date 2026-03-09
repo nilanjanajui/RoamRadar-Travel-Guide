@@ -27,13 +27,15 @@
         <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 sm:py-6">
 
             <!-- RESPONSIVE NAVBAR -->
-            <div class="navbar bg-base-100 shadow-sm rounded-xl mb-6 px-2 sm:px-3">
+            <div
+                class="navbar bg-base-100 shadow-sm rounded-xl mb-6 px-2 sm:px-3">
 
                 <!-- LEFT: Logo + Hamburger Dropdown -->
                 <div class="navbar-start min-w-0">
                     <!-- Hamburger for mobile -->
                     <div class="dropdown lg:hidden mobile-only">
-                        <label tabindex="0" class="btn btn-ghost btn-sm sm:btn-md">
+                        <label tabindex="0"
+                            class="btn btn-ghost btn-sm sm:btn-md">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -44,7 +46,8 @@
                         </label>
                         <ul tabindex="-1"
                             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow">
-                            <li><a class="text-purple-600 font-semibold">Dashboard</a></li>
+                            <li><a
+                                    class="text-purple-600 font-semibold">Dashboard</a></li>
                             <li>
                                 <a>My Trips</a>
                                 <ul class="p-2 bg-base-100 w-40 rounded-box">
@@ -58,16 +61,20 @@
                     </div>
 
                     <!-- Logo -->
-                    <a class="flex items-center gap-2 !text-purple-600 px-2 py-1">
-                        <i class="fa-solid fa-paper-plane text-2xl sm:text-3xl !text-indigo-700"></i>
-                        <h1 class="text-3xl sm:text-4xl !font-black leading-none !text-indigo-600">RoamRadar</h1>
+                    <a
+                        class="flex items-center gap-2 !text-purple-600 px-2 py-1">
+                        <i
+                            class="fa-solid fa-paper-plane text-2xl sm:text-3xl !text-indigo-700"></i>
+                        <h1
+                            class="text-3xl sm:text-4xl !font-black leading-none !text-indigo-600">RoamRadar</h1>
                     </a>
                 </div>
 
                 <!-- CENTER: Links for desktop -->
                 <div class="navbar-center hidden lg:flex desktop-only">
                     <ul class="menu menu-horizontal px-1">
-                        <li><a class="text-purple-600 font-semibold">Dashboard</a></li>
+                        <li><a
+                                class="text-purple-600 font-semibold">Dashboard</a></li>
                         <li>
                             <details>
                                 <summary>My Trips</summary>
@@ -85,6 +92,10 @@
                 <!-- RIGHT: Avatar / Button -->
                 <div class="navbar-end flex items-center gap-2 sm:gap-4">
                     <i class="fa-regular fa-bell text-base sm:text-lg"></i>
+                    <button id="theme-toggle" class="btn btn-ghost text-lg"
+                        title="Toggle theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
                     <div class="avatar">
                         <div class="w-8 sm:w-9 rounded-full">
                             <img src="https://i.pravatar.cc/100"
@@ -136,13 +147,17 @@
                                     <i class="fa-solid fa-sun text-4xl"></i>
                                 </div>
                                 <div class="mt-4">
-                                    <div id="weather-temp-static" class="text-4xl font-bold">22° C</div>
-                                    <div id="weather-temp-live" class="text-4xl font-bold hidden"></div>
+                                    <div id="weather-temp-static"
+                                        class="text-4xl font-bold">22° C</div>
+                                    <div id="weather-temp-live"
+                                        class="text-4xl font-bold hidden"></div>
                                 </div>
-                                <p id="weather-desc-static" class="text-sm opacity-90">Sunny with clear
+                                <p id="weather-desc-static"
+                                    class="text-sm opacity-90">Sunny with clear
                                     skies. Perfect for a walk in Gion
                                     district.</p>
-                                <p id="weather-desc-live" class="text-sm opacity-90 hidden"></p>
+                                <p id="weather-desc-live"
+                                    class="text-sm opacity-90 hidden"></p>
                             </div>
                         </div>
 
@@ -172,7 +187,8 @@
                             class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
                             <h2 class="font-semibold text-lg">Recommended
                                 Attractions</h2>
-                            <a class="text-sm link link-hover text-primary self-start sm:self-auto">View
+                            <a
+                                class="text-sm link link-hover text-primary self-start sm:self-auto">View
                                 All</a>
                         </div>
 
@@ -314,15 +330,14 @@
                     </div>
 
                     <!-- AI CARD -->
-                    <div
-                        class="card bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow">
+                    <div class="card ai-card shadow">
                         <div class="card-body">
                             <h3 class="font-bold">Plan with AI</h3>
                             <p class="text-sm opacity-90">
                                 Let our AI build your perfect 7-day itinerary.
                             </p>
                             <button
-                                class="btn btn-outline border-white text-white hover:bg-purple-700 hover:text-white mt-2">
+                                class="btn btn-outline ai-card-btn mt-2">
                                 Get Started
                             </button>
                         </div>
@@ -342,7 +357,8 @@
 
                 <p>© 2023 RoamRadar Travel Dashboard</p>
 
-                <div class="space-x-3 flex flex-wrap justify-center sm:justify-start">
+                <div
+                    class="space-x-3 flex flex-wrap justify-center sm:justify-start">
                     <a class="link link-hover">Terms</a>
                     <a class="link link-hover">Privacy</a>
                     <a class="link link-hover">Support</a>
@@ -350,7 +366,9 @@
             </footer>
 
         </div>
+
         
+
         <script src="script/app.js"></script>
 
     </body>
