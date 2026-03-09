@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>RoamRadar</title>
+
+        <!-- Tailwind -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+        <!-- DaisyUI -->
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.css"
+            rel="stylesheet">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+        <link rel="stylesheet"
+            href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    </head>
+    <body class="bg-base-200 min-h-screen">
+
+        <div class="max-w-7xl mx-auto p-6">
+
+            <!-- RESPONSIVE NAVBAR -->
+            <div class="navbar bg-base-100 shadow-sm rounded-xl mb-6">
+
+                <!-- LEFT: Logo + Hamburger Dropdown -->
+                <div class="navbar-start">
+                    <!-- Hamburger for mobile -->
+                    <div class="dropdown">
+                        <label tabindex="0" class="btn btn-ghost lg:hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h8m-8 6h16" />
+                            </svg>
+                        </label>
+                        <ul tabindex="-1"
+                            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow">
+                            <li><a>Dashboard</a></li>
+                            <li>
+                                <a>My Trips</a>
+                                <ul class="p-2 bg-base-100 w-40 rounded-box">
+                                    <li><a>Upcoming</a></li>
+                                    <li><a>Past</a></li>
+                                </ul>
+                            </li>
+                            <li><a>Explore</a></li>
+                            <li><a>Community</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Logo -->
+                    <a class="btn btn-ghost text-xl flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-primary"></i>
+                        RoamRadar
+                    </a>
+                </div>
+
+                <!-- CENTER: Links for desktop -->
+                <div class="navbar-center hidden lg:flex">
+                    <ul class="menu menu-horizontal px-1">
+                        <li><a>Dashboard</a></li>
+                        <li>
+                            <details>
+                                <summary>My Trips</summary>
+                                <ul class="p-2 bg-base-100 rounded-box">
+                                    <li><a>Upcoming</a></li>
+                                    <li><a>Past</a></li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li><a>Explore</a></li>
+                        <li><a>Community</a></li>
+                    </ul>
+                </div>
+
+                <!-- RIGHT: Avatar / Button -->
+                <div class="navbar-end flex items-center gap-4">
+                    <i class="fa-regular fa-bell text-lg"></i>
+                    <div class="avatar">
+                        <div class="w-9 rounded-full">
+                            <img src="https://i.pravatar.cc/100"
+                                alt="User avatar" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+            <div class="bg-base-100 p-5 rounded-xl shadow-sm mb-6">
+                <div
+                    class="input input-bordered flex items-center gap-2 w-full">
+                    <i class="fa-solid fa-search text-gray-400"></i>
+                    <input type="text" class="grow"
+                        placeholder="Where are you dreaming of going next?" />
+                </div>
+
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="badge badge-outline">Tokyo, Japan</span>
+                    <span class="badge badge-outline">Paris, France</span>
+                    <span class="badge badge-outline">Bali, Indonesia</span>
+                    <span class="badge badge-outline">New York, USA</span>
+                </div>
+            </div>
+
+            <!-- MAIN GRID -->
+            <div class="grid lg:grid-cols-3 gap-6">
+
+                <!-- LEFT CONTENT -->
+                <div class="lg:col-span-2 space-y-6">
+
+                    <!-- WEATHER + FACTS -->
+                    <div class="grid md:grid-cols-2 gap-6">
+
+                        <!-- WEATHER CARD -->
+                        <div
+                            class="card bg-primary text-primary-content shadow">
+                            <div class="card-body">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p
+                                            class="text-xs uppercase opacity-70">Current
+                                            Weather</p>
+                                        <h2 class="text-2xl font-bold">Kyoto,
+                                            Japan</h2>
+                                    </div>
+                                    <i class="fa-solid fa-sun text-4xl"></i>
+                                </div>
+                                <div class="text-4xl font-bold mt-4">22°c</div>
+                                <p class="text-sm opacity-90">Sunny with clear
+                                    skies. Perfect for a walk in Gion
+                                    district.</p>
+                            </div>
+                        </div>
+
+                        <!-- QUICK FACTS -->
+                        <div class="card bg-base-100 shadow">
+                            <div class="card-body">
+                                <h3 class="font-semibold">Quick Facts</h3>
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex gap-2"><i
+                                            class="fa-solid fa-money-bill-wave text-primary"></i>
+                                        Japanese Yen (JPY)</li>
+                                    <li class="flex gap-2"><i
+                                            class="fa-solid fa-language text-primary"></i>
+                                        Japanese</li>
+                                    <li class="flex gap-2"><i
+                                            class="fa-solid fa-clock text-primary"></i>
+                                        GMT +9</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ATTRACTIONS -->
+                    <div>
+                        <div id="attractions-grid"
+                            class="flex justify-between items-center mb-3">
+                            <h2 class="font-semibold text-lg">Recommended
+                                Attractions</h2>
+                            <a class="text-sm link link-hover text-primary">View
+                                All</a>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <!-- CARD 1 -->
+                            <div class="card bg-base-100 shadow">
+                                <figure>
+                                    <img
+                                        src="https://images.unsplash.com/photo-1549693578-d683be217e58"
+                                        alt>
+                                </figure>
+                                <div class="card-body p-4">
+                                    <h3 class="font-semibold">Fushimi Inari
+                                        Shrine</h3>
+                                    <p class="text-xs opacity-70">Famous for
+                                        thousands of vermilion torii gates.</p>
+                                    <div
+                                        class="flex justify-between items-center mt-2">
+                                        <span
+                                            class="badge badge-success badge-sm">Must
+                                            Visit</span>
+                                        <i class="fa-regular fa-heart"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD 2 -->
+                            <div class="card bg-base-100 shadow">
+                                <figure>
+                                    <img
+                                        src="https://images.unsplash.com/photo-1501785888041-af3ef285b470"
+                                        alt>
+                                </figure>
+                                <div class="card-body p-4">
+                                    <h3 class="font-semibold">Bamboo Grove</h3>
+                                    <p class="text-xs opacity-70">Stunning
+                                        pathway through towering bamboo.</p>
+                                    <div
+                                        class="flex justify-between items-center mt-2">
+                                        <span
+                                            class="badge badge-info badge-sm">Nature</span>
+                                        <i class="fa-regular fa-heart"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD 3 -->
+                            <div class="card bg-base-100 shadow">
+                                <figure>
+                                    <img
+                                        src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e"
+                                        alt>
+                                </figure>
+                                <div class="card-body p-4">
+                                    <h3 class="font-semibold">Golden
+                                        Pavilion</h3>
+                                    <p class="text-xs opacity-70">Zen temple
+                                        covered with gold leaf.</p>
+                                    <div
+                                        class="flex justify-between items-center mt-2">
+                                        <span
+                                            class="badge badge-warning badge-sm">Cultural</span>
+                                        <i class="fa-regular fa-heart"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- JOURNAL -->
+                    <div class="card bg-base-100 shadow">
+                        <div class="card-body">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-semibold">Trip Journal &
+                                    Notes</h3>
+                                <i class="fa-solid fa-plus"></i>
+                            </div>
+                            <div class="bg-base-200 p-4 rounded-lg mt-3">
+                                <p class="font-medium">Dinner at Pontocho
+                                    Alley</p>
+                                <p class="text-sm opacity-70">Need to book a
+                                    reservation for that riverside restaurant.
+                                    Dress code is smart casual.</p>
+                            </div>
+                            <textarea class="textarea textarea-bordered mt-3"
+                                placeholder="Start typing a new note..."></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT SIDEBAR -->
+                <div class="space-y-6">
+
+                    <!-- FAVORITES -->
+                    <div id="favorites-container"
+                        class="card bg-base-100 shadow">
+                        <div class="card-body">
+                            <h3 class="font-semibold">My Favorites</h3>
+                            <p class="text-xs opacity-70">Quick access to your
+                                saved spots</p>
+
+                            <div class="space-y-3 mt-3">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium text-sm">Himeji
+                                            Castle</p>
+                                        <p class="text-xs opacity-60">Hyogo
+                                            Prefecture</p>
+                                    </div>
+                                    <i
+                                        class="fa-solid fa-heart text-red-500"></i>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium text-sm">Mount
+                                            Fuji</p>
+                                        <p
+                                            class="text-xs opacity-60">Shizuoka</p>
+                                    </div>
+                                    <i
+                                        class="fa-solid fa-heart text-red-500"></i>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium text-sm">Nara
+                                            Park</p>
+                                        <p class="text-xs opacity-60">Nara</p>
+                                    </div>
+                                    <i
+                                        class="fa-solid fa-heart text-red-500"></i>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-sm mt-4">Create
+                                New Folder</button>
+                        </div>
+                    </div>
+
+                    <!-- AI CARD -->
+                    <div
+                        class="card bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow">
+                        <div class="card-body">
+                            <h3 class="font-bold">Plan with AI</h3>
+                            <p class="text-sm opacity-90">
+                                Let our AI build your perfect 7-day itinerary.
+                            </p>
+                            <button
+                                class="btn btn-outline border-white text-white hover:bg-purple-700 hover:text-white mt-2">
+                                Get Started
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <footer
+                class="mt-10 text-sm text-gray-500 flex flex-wrap justify-between items-center gap-2">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-primary"></i>
+                    RoamRadar
+                </div>
+
+                <p>© 2023 RoamRadar Travel Dashboard</p>
+
+                <div class="space-x-3 flex flex-wrap">
+                    <a class="link link-hover">Terms</a>
+                    <a class="link link-hover">Privacy</a>
+                    <a class="link link-hover">Support</a>
+                </div>
+            </footer>
+
+        </div>
+        
+        <!-- ATTRACTION DETAILS MODAL -->
+        <input type="checkbox" id="attraction-modal-toggle"
+            class="modal-toggle" />
+        <div class="modal">
+            <div class="modal-box relative max-w-2xl">
+                <label for="attraction-modal-toggle"
+                    class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                <img id="modal-img"
+                    class="w-full h-64 object-cover rounded-lg mb-4" alt>
+                <h3 id="modal-title" class="font-bold text-xl mb-2"></h3>
+                <p id="modal-desc" class="text-sm opacity-80"></p>
+                <span id="modal-type" class="badge badge-primary mt-2"></span>
+            </div>
+        </div>
+
+        <script src="script/app.js"></script>
+
+    </body>
+</html>
