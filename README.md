@@ -78,7 +78,7 @@ RoamRadar/
 1. Clone the repository:
 
 ```
-git clone [https://github.com/nilanjanajui/RoamRadar-Travel-Guide.git]
+git clone https://github.com/nilanjanajui/RoamRadar-Travel-Guide.git
 ```
 
 2. Open `index.html` in your browser.
