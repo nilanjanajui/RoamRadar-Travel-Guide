@@ -88,6 +88,3 @@ git clone https://github.com/nilanjanajui/RoamRadar-Travel-Guide.git
 ### Live Demo
 
 Check out the live demo here: [https://roamradar.netlify.app/](https://roamradar.netlify.app/)
-
-
-
